@@ -1,0 +1,10 @@
+# Example configuration for the alert bot
+fetch_interval_minutes: 60
+filters:
+  city: "Lisbon"
+  max_price: 200
+  guests: 2
+notify:
+  method: console # console | telegram
+  telegram_token: "YOUR_TOKEN"
+  telegram_chat_id: "YOUR_CHAT_ID"
