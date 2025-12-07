@@ -18,5 +18,18 @@ class TelegramNotifier:
         self.chat_id = chat_id
 
     def notify(self, change: Dict):
-        # Placeholder: real implementation would call Telegram API
-        logger.info("TelegramNotifier would send message: %s", change)
+        # Real implementation: POST to Telegram Bot API
+        try:
+            import requests
+        except Exception:
+            logger.warning("requests not available; cannot send Telegram message")
+            return
+        msg = f"ALERT {change.get('change_type').upper()} - {change.get('listing_id')}: {change.get('new') }"
+        url = f"https://api.telegram.org/bot{self.token}/sendMessage"
+        payload = {"chat_id": self.chat_id, "text": msg}
+        try:
+            r = requests.post(url, json=payload, timeout=5)
+            r.raise_for_status()
+            logger.info("Telegram message sent for %s", change.get('listing_id'))
+        except Exception as e:
+            logger.exception("Failed to send Telegram message: %s", e)
